@@ -1,5 +1,29 @@
-# Vue 3 + TypeScript + Vite
+# RegSim Web
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Bakalárska práca — webová rekonštrukcia register-transfer
+simulátora **RegSim**, nástroja na výučbu architektúry počítačov na úrovni
+mikroinštrukcií (fetch–decode–execute cyklus, registre MBR/ACC/MAR/PC/IR/SR).
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Stack
+
+- Vue 3 + `<script setup>` (Composition API)
+- TypeScript
+- Pinia (stav simulátora)
+- Vitest (unit testy jadra logiky)
+- Vite
+
+## Architektúra
+
+- `src/core/` — čistá logika simulátora (typy, mikroinštrukcie, dekodér),
+  bez závislosti na Vue. Testovateľná samostatne.
+- `src/stores/` — Pinia store nad `core/`, zdieľaný stav naprieč appkou.
+- `src/components/`, `src/views/` — UI vrstva (schéma registrov, pamäťové
+  panely, editor vlastných inštrukcií).
+
+## Vývoj
+
+\`\`\`bash
+npm install
+npm run dev      # dev server
+npm run test     # Vitest
+\`\`\`
