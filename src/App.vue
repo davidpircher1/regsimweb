@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
     import { ref } from 'vue'
-    import Register from '@/components/Register.vue'
+    import Register from './components/Register.vue';
 
     const registers = ref(['PC', 'MAR', 'IR', 'MBR', 'ACC'])
 </script>

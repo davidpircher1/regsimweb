@@ -1,5 +1,11 @@
-import type { Instruction } from './types';
+import type { SimulatorState, Instruction} from '../types';
 
+export function incrementPc(state: SimulatorState) : SimulatorState {
+  return {
+    ...state, 
+    pc: state.pc + 1,
+  }
+}
 
 export function decode(instruction: number) : Instruction {
     const opcode     = instruction & 0b111111;      // lower 6 bits 
@@ -7,17 +13,4 @@ export function decode(instruction: number) : Instruction {
     const operand    = instruction >>> 8;           // shift 8 bits, get only operand 
 
     return { opcode, addressing, operand };
-}
-
-export function selectInstruction(opCode: number) {
-    switch(opCode) {
-        case 0: 
-            console.log("Halt")
-            break;
-        case 1: 
-            console.log("ADD")
-            break;
-        default:
-            console.log("Zly opcode")
-    }
 }
