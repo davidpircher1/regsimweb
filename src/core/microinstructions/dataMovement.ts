@@ -35,5 +35,12 @@ export function irAddToMbr(state: SimulatorState) : SimulatorState {
   return {
     ...state,
     mbr: decode(state.ir).operand
-  }
+  };
+}
+
+export function mbrAddToMar(state: SimulatorState) : SimulatorState {
+  return {
+    ...state, 
+    mar: state.mbr,
+  };
 }

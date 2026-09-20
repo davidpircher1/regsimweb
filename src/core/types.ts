@@ -27,7 +27,7 @@ export interface SimulatorState {
 // micro instruction
 interface MicroInstruction {
   type: 'micro',
-  name: string // micro instruction has no code, only own name
+  op: string // micro instruction has no code, only own name
 }
 
 // reference for custom instruction
@@ -36,11 +36,12 @@ interface RefStep {
   instructionId: number // not using name, because it has own OP CODE
 }
 
-type InstructionStep = MicroInstruction | RefStep; // choosing right type for instruction
+export type InstructionStep = MicroInstruction | RefStep; // choosing right type for instruction
 
 // custom instruction 
-interface CustomInstruction {
+export interface InstructionDefinition {
     id: number, // opcode of new instruction
     name: string,
-    steps: InstructionStep[] // array of custom instruction, it can be microinstruction mixed with custom
+    steps: InstructionStep[], // array of custom instruction, it can be microinstruction mixed with custom
+    allowedAddressingMode: number[]
 }
