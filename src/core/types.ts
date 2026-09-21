@@ -21,7 +21,7 @@ export interface SimulatorState {
     sr: {c: boolean, v: boolean, n: boolean, z: boolean} // flags
     instructionMemory: MemoryCell[], // instructions will be here
     dataMemory: MemoryCell[], // data will be here
-    currentStepIndex: number
+    halted: boolean
 }
 
 // micro instruction

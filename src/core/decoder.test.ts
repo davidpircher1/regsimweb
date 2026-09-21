@@ -2,7 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { fetchCycle } from './decoder';
 import { createTestState } from './testHelpers';
-import { runInstructions, encode } from './decoder';
+import { runInstructions, encode, decode } from './decoder';
+import { writeDataMem } from './microinstructions/memory';
 
 describe('fetchCycle', () => {
     it('load instruction and increment pc by 1', () => {
@@ -56,5 +57,29 @@ describe('runInstructions', () => {
         state.instructionMemory[2] = { value: encode({ opcode: 10, addressing: 2, operand: 0 }), breakpoint: false };
 
         expect(() => runInstructions(state)).toThrow();
+    });
+
+    it('writeMem test', () => {
+        const state = createTestState();
+        state.mar = 5;
+        state.mbr = 42;
+        state.dataMemory[5] = { value: 0, breakpoint: false };   
+
+        const result = writeDataMem(state);
+
+        expect(result.dataMemory[5].value).toBe(42);
+        expect(result.dataMemory[4]).toEqual(state.dataMemory[4]);   // other memory cells unchanged
+    });
+
+    it('encode/decode round-trip pre záporné operandy pri rôznych addressing módoch', () => {
+    for (const addressing of [0, 1, 2]) {
+        for (const operand of [-8, -3, -100, 0, 7, 100]) {
+            const raw = encode({ opcode: 1, addressing, operand });
+            const result = decode(raw);
+            expect(result.operand).toBe(operand);
+            expect(result.addressing).toBe(addressing);
+            expect(result.opcode).toBe(1);
+        }
+    }
     });
 });

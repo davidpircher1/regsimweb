@@ -10,6 +10,6 @@ export function createTestState() : SimulatorState{
         sr: {c: false, v: false, n: false, z: false}, // flags
         instructionMemory: Array.from({ length: 16 }, () => ({ value: 0, breakpoint: false })),
         dataMemory: Array.from({ length: 16 }, () => ({ value: 0, breakpoint: false })),
-        currentStepIndex: 0,    
+        halted: false,    
     }
 }

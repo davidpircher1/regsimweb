@@ -6,21 +6,34 @@ import { microOps } from './microinstructions';
 import { instructionLibrary } from './instructionLibrary';
 import { addressingModeLibrary } from './addressingLibrary';
 
+const operandBits = 24;
+const addressingBits = 2;
+const opcodeBits = 6;
 
-export function decode(instruction: number) : Instruction {
-    const opcode     = instruction & 0b111111;      // lower 6 bits 
-    const addressing = (instruction >> 6) & 0b11;   // move opCode with shift, use only 2 bits
-    const operand    = instruction >>> 8;           // shift 8 bits, get only operand 
+export function decode(instruction: number): Instruction {
+    const opcode = instruction & ((1 << opcodeBits) - 1); // get number through mask
+    const addressing = (instruction >> opcodeBits) & ((1 << addressingBits) - 1); // same thing here, but we need shift opcode bits away
+
+    let operand = instruction >>> (opcodeBits + addressingBits); // logic shift to prevent copying highest bit by neg. number, interprets wrong neg. numbers with >>
+
+    const signBit = 1 << (operandBits - 1);   // comparison of highest bit, if the number is positive or negative
+
+    if (operand & signBit) {
+        // if it is true - the number is negative 
+        operand = operand - (1 << operandBits); // we sub 1 left-bit bigger number and our result will be negative (0 bits) 
+    }
 
     return { opcode, addressing, operand };
 }
 
-export function encode(instruction: Instruction) : number {
-    instruction.operand = instruction.operand << 8;
-    instruction.addressing = instruction.addressing << 6;
-    
-    return instruction.operand + instruction.addressing + instruction.opcode;
-} 
+export function encode(instruction: Instruction): number {
+    const maskedOperand = instruction.operand & ((1 << operandBits) - 1); // mask is 1 moved to end, it gives us 1 000, then minus 1 => 0 111 
+
+    // glute everything together
+    return (maskedOperand << (opcodeBits + addressingBits))
+         | (instruction.addressing << opcodeBits)
+         | instruction.opcode;
+}
 
 export function fetchCycle(state: SimulatorState) : {state: SimulatorState, instruction: Instruction} {
     let currentState = state;
